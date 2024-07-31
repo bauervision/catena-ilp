@@ -1,0 +1,16 @@
+{
+  "projects": {
+    "default": "leidos-dev"
+  },
+  "targets": {
+    "leidos-catena": {
+      "hosting": {
+        "portal": [
+          "leidos-catena"
+        ]
+      }
+    }
+  },
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
+}
