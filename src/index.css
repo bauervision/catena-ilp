@@ -21,6 +21,12 @@ code {
 
 .navbar {
   width: 100%;
+  background: rgb(41, 41, 70);
+  background: linear-gradient(
+    180deg,
+    rgba(41, 41, 70, 1) 0%,
+    rgba(70, 68, 71, 1) 100%
+  );
 }
 
 @keyframes fadeInDown {

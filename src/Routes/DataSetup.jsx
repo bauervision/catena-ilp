@@ -3,7 +3,8 @@ import "../App.css";
 // Component imports
 import { DataForm } from "../components/DataForm";
 import UserTable from "../components/UserTable";
-export default function Data() {
+
+export default function DataSetup() {
   const usersData = [
     { id: 1, field: "Age", dataType: "int" },
     { id: 2, field: "Name", dataType: "string" },
@@ -38,8 +39,9 @@ export default function Data() {
   };
 
   return (
-    <div className="container vh-100">
+    <div className="">
       <h2 className=" text-center  pt-3">Catēna Data Configuration</h2>
+
       <div className="card pt-3">
         <div className="flex-row">
           <div className="flex-large">

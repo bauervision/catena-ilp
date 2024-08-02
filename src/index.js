@@ -1,55 +1,122 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import "./index.css";
-import reportWebVitals from "./reportWebVitals";
-// Routes
-import Root from "./Routes/Root";
-import ErrorPage from "./Routes/ErrorPage";
-import Tutorials from "./Routes/Tutorials";
-import Tickets from "./Routes/Tickets";
+import {
+  RouterProvider,
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  redirect,
+} from "react-router-dom";
+import { getDatabase, ref, child, get } from "firebase/database";
+
+import "./App.css";
+import Home from "./Routes/Home";
+import Layout from "./Routes/Layout";
 import Profile from "./Routes/Profile";
-import SignUp from "./Routes/SignUp";
-import Data from "./Routes/Data";
+import Tickets from "./Routes/Tickets";
+import Login from "./Routes/Login";
+import Tutorials from "./Routes/Tutorials";
+import DataSetup from "./Routes/DataSetup";
+import { auth } from "./config";
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Root />,
-    errorElement: <ErrorPage />,
-    children: [
-      {
-        path: "",
-        element: <SignUp />,
-      },
-      {
-        path: "tutorials",
-        element: <Tutorials />,
-      },
-      {
-        path: "tickets",
-        element: <Tickets />,
-      },
-      {
-        path: "profile",
-        element: <Profile />,
-      },
-      {
-        path: "data",
-        element: <Data />,
-      },
-    ],
-  },
-]);
+function App() {
+  const [user, setUser] = useState();
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
-);
+  useEffect(() => {
+    if (!user) {
+      auth.onAuthStateChanged((user) => {
+        if (user != null) {
+          console.log("User: " + user.email + " is logged in");
+        } else {
+          console.log("No one is logged in!");
+        }
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+        setUser(user);
+      });
+    }
+  });
+
+  const [myData, setMyData] = useState(null);
+
+  useEffect(() => {
+    if (user) {
+      const getMyData = async () => {
+        const dbRef = ref(getDatabase());
+        get(child(dbRef, `users/${user.uid}`))
+          .then((snapshot) => {
+            if (snapshot.exists()) {
+              var data = snapshot.val();
+              console.log(data);
+              setMyData(data);
+            } else {
+              console.log("No data available");
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      };
+
+      getMyData();
+    }
+  }, [user]);
+
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <Route path="/" element={<Layout user={myData} />}>
+        <Route
+          index
+          element={<Home />}
+          loader={async () => {
+            return null;
+          }}
+        />
+        <Route
+          path="profile"
+          element={<Profile myData={myData} />}
+          loader={async () => {
+            if (!user) {
+              redirect("/login");
+            }
+            return null;
+          }}
+        />
+        <Route
+          path="tutorials"
+          element={<Tutorials />}
+          loader={async () => {
+            if (!user) {
+              redirect("/login");
+            }
+            return null;
+          }}
+        />
+        <Route
+          path="tickets"
+          element={<Tickets />}
+          loader={async () => {
+            if (!user) {
+              redirect("/login");
+            }
+            return null;
+          }}
+        />
+        <Route
+          path="datasetup"
+          element={<DataSetup />}
+          loader={async () => {
+            if (!user) {
+              redirect("/login");
+            }
+            return null;
+          }}
+        />
+        <Route path="login" element={<Login />} />
+      </Route>
+    )
+  );
+
+  return <RouterProvider router={router} />;
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);

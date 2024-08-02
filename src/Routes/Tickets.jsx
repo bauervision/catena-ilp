@@ -12,47 +12,45 @@ export default function Tickets() {
   }, [ticketType]);
 
   return (
-    <div className="App">
-      <div className="container vh-100">
-        {/* Content */}
-        <h2 className=" text-center  pt-3">Catēna Ticket Submission</h2>
+    <div className="">
+      {/* Content */}
+      <h2 className=" text-center  pt-3">Catēna Ticket Submission</h2>
 
-        <div className="row justify-content-center">
-          <Form>
-            <Form.Check // prettier-ignore
-              inline
-              type="radio"
-              id="ReportBug"
-              label="Report Bug"
-              name="group1"
-              onChange={() => setTicketType("bug")}
-            />
-            <Form.Check // prettier-ignore
-              inline
-              type="radio"
-              label="Feature Request"
-              id="disabled-custom-switch"
-              name="group1"
-              onChange={() => setTicketType("feature")}
-            />
-          </Form>
-        </div>
-        <div className=" pt-3 mt-3">
-          {ticketType === undefined && <div> Select a ticket type</div>}
-          {ticketType === "bug" && (
-            <div>
-              <h2>Bug Report</h2>
-              <SimpleForm />
-            </div>
-          )}
+      <div className="row justify-content-center">
+        <Form>
+          <Form.Check // prettier-ignore
+            inline
+            type="radio"
+            id="ReportBug"
+            label="Report Bug"
+            name="group1"
+            onChange={() => setTicketType("bug")}
+          />
+          <Form.Check // prettier-ignore
+            inline
+            type="radio"
+            label="Feature Request"
+            id="disabled-custom-switch"
+            name="group1"
+            onChange={() => setTicketType("feature")}
+          />
+        </Form>
+      </div>
+      <div className=" pt-3 mt-3">
+        {ticketType === undefined && <div> Select a ticket type</div>}
+        {ticketType === "bug" && (
+          <div>
+            <h2>Bug Report</h2>
+            <SimpleForm />
+          </div>
+        )}
 
-          {ticketType === "feature" && (
-            <div>
-              <h2>Feature Request</h2>
-              <div> Fill in here</div>
-            </div>
-          )}
-        </div>
+        {ticketType === "feature" && (
+          <div>
+            <h2>Feature Request</h2>
+            <div> Fill in here</div>
+          </div>
+        )}
       </div>
     </div>
   );
